@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TODO LIST</title>
+    <script src="node_modules/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <div id="app">
+
+        <div v-show="listTODO.length != 0" class="card border border-success kotak" style="overflow: scroll;">
+            <div class="card-body">
+                <h5 class="card-title" style="text-align: center; font-size: 32px; margin-bottom: 30px;">TODO LIST: </h5>
+                <div v-for="(todo, index) in listTODO" :key=index class="card" style="margin: 10px 0px;">
+                   
+                    <div>
+                        <i @click="listTODO.splice(index, 1)" class="fa fa-times" aria-hidden="true" style="float: right; cursor: pointer; "></i>
+                        <div v-if="todo.prioritas === 'Penting'" class="card-header " style="background-color: #fc3003">
+                            {{todo.nama.toUpperCase()}}
+                        </div>
+                       
+                        <div v-else-if="todo.prioritas === 'Biasa'" class="card-header " style="background-color: #03a1fc;">
+                            {{todo.nama}}
+                        </div>
+    
+                        <div v-else class="card-header " style="background-color: #03fc94;">
+                            {{todo.nama}}
+                        </div>                 
+                    </div> 
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">{{todo.catatanTodo}}</li>
+                      </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border border-success kotak">
+            <h5 class="card-title" style="text-align: center; font-size: 32px; margin-bottom: 30px; margin-top: 20px;">TULIS TODO </h5>
+            <div class="card-body">
+                <form action="">
+                    <div class="form-group">
+                        <input class="form-control" v-model="namaTodo" type="text" placeholder="Nama to do" value="">
+                    </div>
+                    
+                    <div class="form-group">
+                        <select class="form-control" v-model="prioritas">
+                            <option value="Penting">Penting</option>
+                            <option value="Biasa">Biasa</option>
+                            <option value="Tidak Penting">Tidak Penting</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <textarea class="form-control" v-model="catatanTodo" type="text" placeholder="Catatan" rows="5" value=""></textarea>
+                    </div>
+                    
+                    <button @click="reset" class="btn btn-secondary">Reset</button>
+                    <button @click="tambah" type="submit" class="btn btn-success">Submit</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer">{{Person.Nama}} | {{Person.NPM}} | {{Person.Kelas}}</div>
+    </div>
+</body>
+</html>
+
+
+<script>
+
+    const app =  new Vue({
+        el: "#app",
+        data: {
+            namaTodo: '',
+            prioritas: '',
+            catatanTodo: '',
+            listTODO:[],
+            Person: {
+                Nama: 'Aditya Ryo Handoko',
+                NPM: '180709840',
+                Kelas: 'PAW - A'
+            }
+        },
+        methods: {
+            tambah:function(e) {
+                if(this.namaTodo && this.prioritas && this.catatanTodo) {
+                    this.listTODO.push({nama: this.namaTodo, prioritas: this.prioritas, catatanTodo: this.catatanTodo});
+                }
+                
+                this.reset(e);
+            },
+            reset:function(e) {
+                this.namaTodo= '';
+                this.prioritas= '';
+                this.catatanTodo= '';
+
+                e.preventDefault();
+            },
+        }
+    });
+
+</script>
+
+<style>
+    .footer {
+      position: relative;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      color: black;
+      text-align: center;
+    }
+
+    .kotak {
+        width: 50rem; 
+        height: 30rem; 
+        margin: 30px auto; 
+    }
+
+    .inputan {
+        width: auto;
+    }
+</style>
