@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tebak Angka</title>
+    <script src="node_modules/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <div id="app">
+        <div class="card border border-success" style="width: 30rem; height: 30rem; margin: 30px auto;">
+            <div class="card-body">
+                <h5 class="card-title" style="text-align: center; font-size: 32px; margin-bottom: 30px;">{{judul}}</h5>
+                <h3>Health: 
+                    <span v-for="i in chanceLeft"> 
+                        <i style="color: red;"class="fa fa-heart" aria-hidden="true"></i>
+                    </span>
+                </h3>
+        
+                <input  :disabled="clicked" v-model="guestNumber" type="number" style="width: 400px;">
+                <br>
+                <button :disabled="clicked" @click="checkAngka" class="btn btn-primary" style="margin: 20px 0;">Submit</button>
+                <p v-if="clicked && !lower && !isWin && chanceLeft" class="alert alert-warning" role="alert">Salah! angka harusnya lebih kecil</p>
+                <p v-if="clicked && !greater && !isWin && chanceLeft" class="alert alert-primary" role="alert">Salah! angka harusnya lebih besar</p>
+                <button @click="mainLagi" v-if="clicked" class="btn btn-success" >MAIN LAGI</button>
+            
+                <p v-if="isWin" class="alert alert-success" role="alert">Selamat Anda Benar!</p>
+                <p v-if="!isWin && chanceLeft === 0" class="alert alert-danger" role="alert">Kalah! Angka: {{number}}</p>
+            </div>
+        </div>
+        <div class="footer">{{Person.Nama}} | {{Person.NPM}} | {{Person.Kelas}}</div>
+    </div>
+
+</body>
+</html>
+
+<script>
+    let app = new Vue({
+        el: "#app",
+        data: {
+            judul: "Tebak Angka",
+            number: Math.floor(Math.random() * 10) + 1,
+            chanceLeft: 3,
+            guestNumber:'',
+            isWin:false,
+            clicked:false,
+            greater:false,
+            lower:false,
+            Person: {
+                Nama: "Aditya Ryo Handoko",
+                NPM: "180709840",
+                Kelas: "PAW - A"
+            }
+        },
+        methods: {
+            setRandom: function(e) {
+                this.number = Math.floor(Math.random() * 10) + 1;
+                console.log(this.number);
+            },
+            checkAngka: function(e) {
+                this.clicked = true;
+
+                if(this.number === -1) this.setRandom();
+            
+                if(this.number == this.guestNumber){
+                    this.isWin = true;
+                }
+                else {
+                    if(this.number < this.guestNumber) {
+                        this.greater = true;
+                        this.lower = false;
+                    }
+                    else {
+                        this.lower = true;
+                        this.greater = false;
+                    }
+                    
+                    this.chanceLeft--;
+                    console.log(`jawaban: ${this.number}`);
+                }
+            },
+            Retry:function(e) {
+                this.number = -1;
+                this.chanceLeft = 3;
+                this.guestNumber = '';
+                this.isWin = false;
+                this.clicked = false;
+                this.greater = false;
+                this.lower = false;
+            },
+            mainLagi:function(e) {
+                
+                if(this.isWin || !this.chanceLeft) {
+                    this.Retry();
+                }
+                else {
+                    this.clicked = false;
+                    this.lower = false;
+                    this.greater = false;
+                }
+            }
+        }
+    });
+</script>
+
+<style>
+    .footer {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      color: black;
+      text-align: center;
+    }
+</style>
